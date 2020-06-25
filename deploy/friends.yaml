@@ -1,0 +1,8 @@
+apiVersion: cloudstate.io/v1alpha1
+kind: StatefulService
+metadata:
+  name: friends
+spec:
+  containers:
+  - image: cloudstateio/samples-js-chat-friends:latest
+    name: friends

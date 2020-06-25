@@ -1,0 +1,152 @@
+= Deploy Cloudstate Chat sample on Lightbend Cloudstate managed service
+Lightbend, 2020
+Version 2.0, 2020-07-06
+:description: Cloudstate Chat Application 
+:keywords: Cloudstate, stateful, serverless, chat-sample, tutorial, LBCS
+:sectnums:
+:toc:
+ifdef::env-github[]
+:tip-caption: :bulb:
+:note-caption: :information_source:
+:important-caption: :heavy_exclamation_mark:
+:caution-caption: :fire:
+:warning-caption: :warning:
+endif::[]
+
+[deploy-cscluster-overview]
+== Overview
+
+You have built the 3 microservices composing the Chat application: 
+
+* `chat-ui` a stateless service serving the UI
+* `friends` a stateful service to manage the friend list of an user
+* `presence` a stateful service to maintain the online state of an user
+
+You have built the docker images of these services and published these images to your Docker registry. You have also run each of these images and tested that the service is in working order.
+
+If this is not the case, please review <<../README.adoc#cs-chat-sample-overview,Cloudstate Sample Chat Application>> to complete the prerequisites.
+
+We are now ready to deploy the Chat application, which we have chosen to deploy using Lightbend Cloudstate managed services (managed hosting). Compared to the alternative of deploying on your own Kubernetes cluster, Cloudstate managed services relieve the developer from the burden related to the infrastructure:
+
+* no need to provision hardware to setup (and maintain!) a Kubernetes cluster
+* simplify network configuration
+* simplify deployment
+
+
+== Prerequisites
+
+The main requirement is to have a Cloudstate account and some CLI tools to deploy the services on the Cloudstate platform.
+
+The steps are described in https://docs.lbcs.dev/getting-started/index.html[Getting started with Cloudstate]. We have actually already completed the most time consuming steps as we have already built our service. Here we will just need to setup the prerequisites pertaining to the deployment:
+
+
+[[signup-cloudstate-account]]
+=== Sign-up Cloudstate account
+
+To deploy your service on Lightbend Cloudstate host platform, you will need to sign up an account. With your Cloudstate account, you will be granted a Kubernetes cluster on the cloud. This cluster is managed by Lightbend Cloudstate platform. It is customized to host services created using the https://github.com/cloudstateio/cloudstate[Cloudstate library].
+
+Instructions: https://docs.lbcs.dev/getting-started/lightbend-account.html[Using a Cloudstate account]
+
+
+=== Install Cloudstate CLI
+
+`csctl` is the command line tool that you will use to deploy application on your Cloudstate cluster. Instructions: https://docs.lbcs.dev/getting-started/set-up-development-env.html#_cloudstate_cli[Install Cloudstate CLI]
+
+The `csctl` minimum version required is 0.0.9 which you can verify by:
+
+[source,shell]
+----
+$ csctl version
+0.0.9
+----
+
+
+=== Creating a Cloudstate project
+
+A Cloudstate project is a space within your Cloudstate cluster. In this space, you will deploy your Cloudstate-aware application. 
+
+In this step we use the Cloudstate CLI `csctl` to:
+
+* Login to your Cloudstate cluster (which you got when signing-up for a <<signup-cloudstate-account,Cloudstate account>>)
+* Create a Cloudstate project
+* Deploy your services in the project
+
+More details on `csctl` is available at https://docs.lbcs.dev/cli/index.html[csctl reference documentation].
+
+
+[source,shell]
+----
+#===STEP1: connect csctl to your Cloudstate account
+$ csctl auth login
+
+#===STEP2: create a new Cloudstate project
+# Syntax: csctl project new  "project-description" "ignored"
+# NOTE: no space, only lower case
+$ csctl project new chat-application-v2 "Chat room app built with Cloudstate services"
+
+Created project b43197f4-5c75-4bac-af18-8b2be7460696.
+To make this the currently active project, run: 'csctl config set project b43197f4-5c75-4bac-af18-8b2be7460696'
+
+#===STEP3: set the new Cloudstate project as "current"
+$ csctl config set project b43197f4-5c75-4bac-af18-8b2be7460696
+
+#===STEP3: Verify project created OK
+$ csctl project list
+
+  NAME                  DESCRIPTION                                    STATUS    ID
+* chat-application      Chat room app built with Cloudstate services   pending   b43197f4-5c75-4bac-af18-8b2be7460696
+----
+
+IMPORTANT:: A newly created project is in `pending` status, ie. you cannot yet deploy on your Cloudstate cluster. 
+Once the project is activated by Cloudstate administrator (within a short moment). Its status will change to `active`, at which point, you can begin to deploy your services. In case it takes long time for your project to get activated, you can https://docs.lbcs.dev/getting-started/create-project.html#_project_status[[notify Cloudstate admin]
+
+
+== Deployment
+
+Now we are ready to deploy our Chat application on our Cloudstate cluster. The deployment tool is also `csctl`.
+
+At this point you should have all your docker images published in your docker registry, as mentioned in the <<deploy-cscluster-overview, Overview section>>
+
+In case you don't have your own docker images, you can still proceed with the deployment, using the images we have prebuilt in the `cloudstateio` registry on docker hub. To use your own docker images, just replace `cloudstateio` with your own dockerId or docker registry Id.
+
+IMPORTANT:: For the consistency of the documentation, please use the suggested service names: `chat-ui`, `friends`, `presence`
+
+[source,shell]
+----
+# Syntax: $ csctl services deploy <serviceName> <dockerImageCoordinatess>
+$ csctl services deploy chat-ui  cloudstateio/samples-js-chat-ui:latest
+$ csctl services deploy friends  cloudstateio/samples-js-chat-friends:latest
+$ csctl services deploy presence cloudstateio/samples-js-chat-presence:latest
+
+# give the cluster a minute or two to spin uop the resource and verify
+$ csctl services get
+
+# console output
+NAME       AGE    REPLICAS   STATUS   DESCRIPTION
+chat-ui    117s   1          Ready
+friends    110s   1          Ready
+presence   105s   1          Ready
+----
+
+The entrypoint to the Chat application is the `chat-ui` service, which needs to be exposed to allow external access. Notice the service entrypoint given in the console output, `little-cloud-3590.us-east1.apps.lbcs.io` in our example below.
+
+[source,shell]
+----
+$ csctl service expose chat-ui
+
+# console output
+Service 'chat-ui' was successfully exposed at: little-cloud-3590.us-east1.apps.lbcs.io
+----
+
+
+== Testing the Chat Application
+
+By design, the route to access the Chat UI is `/pages/chat.html`. Using the chat-ui service entrypoint obtained when running `csctl service expose chat-ui`, our Chat application is accessible at:
+
+----
+https://little-cloud-3590.us-east1.apps.lbcs.io/pages/chat.html
+----
+
+That's it. Now enjoy the app, the navigation guide is explained at <<../README.adoc#chatui-navigation-guide,Chat navigation guide>>
+
+*(end)*

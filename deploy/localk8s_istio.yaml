@@ -1,11 +1,11 @@
-# Ingress resource, allowing to access the chat WebUI to test Friends and Presence service
+# Ingress resource, allowing to access the Chat WebUI to test Friends and Presence services
 # Pre-Requisites:
 # - itsio ingress controller: https://istio.io/
 # - enable istio sidecar injection in the namespace where the chat sample is deployed
 #   $ kubectl label namespace <my-chatsample-ns> istio-injection=enabled
 #   confirm by:
 #   $ kubectl describe namespace <my-chatsample-ns>
-# - Friends, Presence, Chat must have been deployed
+# - Friends, Presence, Chat-UI services must have been deployed
 
 apiVersion: networking.istio.io/v1alpha3
 kind: Gateway

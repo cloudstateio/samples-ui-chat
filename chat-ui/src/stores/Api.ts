@@ -8,7 +8,8 @@ import { User as UserPesence, OnlineStatus } from '../_proto/presence_pb';
 
 export class Api{
     store: any = null;
-    host = window.location.protocol + "//"+window.location.hostname + (window.location.hostname == "localhost" ? ":" + window.location.port : "");
+    // must preserve host port if explicitly given in browser. eg. http://192.168.1.98:31380/pages/chat.html
+    host = window.location.protocol + "//"+window.location.hostname + (window.location.port.length > 0 ? ":" + window.location.port : "");
 
     presenceStreams: {[id:string]:ResponseStream<OnlineStatus>} = {};
     presenceOnlineStreams: {[id:string]:ResponseStream<Empty>} = {}; 

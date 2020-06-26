@@ -49,7 +49,7 @@ function getBundleImg(imgRequest){
 }
 
 const cloudstate = new Stateless(
-    "chat.proto",
+    "./chatapp_protos/chat-ui.proto",
     "cloudstate.samples.chat.chat.Chat"
 );
 

@@ -1,0 +1,62 @@
+# Ingress resource, allowing to access the chat WebUI to test Friends and Presence service
+# Pre-Requisites:
+# - itsio ingress controller: https://istio.io/
+# - enable istio sidecar injection in the namespace where the chat sample is deployed
+#   $ kubectl label namespace <my-chatsample-ns> istio-injection=enabled
+#   confirm by:
+#   $ kubectl describe namespace <my-chatsample-ns>
+# - Friends, Presence, Chat must have been deployed
+
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: chat-gateway
+spec:
+  selector:
+    istio: ingressgateway # use istio default controller
+  servers:
+  - port:
+      number: 80
+      name: http
+      protocol: HTTP
+    hosts:
+    - "*"
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: chat-virtsvc
+spec:
+  hosts:
+  - "*"
+  gateways:
+  - chat-gateway
+  http:
+  - match:
+    - uri:
+        prefix: "/cloudstate.samples.chat.friends.Friends/"
+    route:
+    - destination:
+        host: friends # `kubectl get service` -> host = NAME, port number = PORT
+        #port:
+        #  number: 80
+    name: friends-routes
+  - match:
+    - uri:
+        prefix: "/cloudstate.samples.chat.presence.Presence/"
+    route:
+    - destination:
+        host: presence # `kubectl get service` -> host = NAME, port number = PORT
+        #port:
+        #  number: 80
+    name: presence-routes
+
+  - match:
+    - uri:
+        prefix: /
+    route:
+    - destination:
+        host: chat-ui # `kubectl get service` -> host = NAME, port number = PORT
+        #port:
+        #  number: 80
+    name: chat-routes

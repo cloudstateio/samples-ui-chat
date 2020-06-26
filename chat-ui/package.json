@@ -66,7 +66,7 @@
     "mobx-react-devtools": "^6.0.3"
   },
   "scripts": {
-    "prestart": "compile-descriptor chat.proto",
+    "prestart": "compile-descriptor ./chatapp_protos/chat-ui.proto",
     "start": "node index.js",
     "start-no-prestart": "node index.js",
     "build": "webpack --config webpack.config.js",

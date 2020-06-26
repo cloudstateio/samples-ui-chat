@@ -1,0 +1,8 @@
+apiVersion: cloudstate.io/v1alpha1
+kind: StatefulService
+metadata:
+  name: chat-ui
+spec:
+  containers:
+  - image: cloudstateio/samples-js-chat-ui:latest
+  name: chat-ui

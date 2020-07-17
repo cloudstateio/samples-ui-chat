@@ -125,6 +125,8 @@ spec:
   - image: mydockerregistry/samples-js-chat-ui:latest
 ----
 
+In case you Docker registry is private, you should configure `kubectl` to https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/[Pull an Image from a Private Registry]
+
 
 === Deploy services on your Kubernetes cluster
 
@@ -477,7 +479,7 @@ http://192.168.1.98:31380/pages/chat.html
 
 * Use a computer OUTSIDE of the Kubernetes cluster
 * Open in a browser the URL given by `http://$INGRESS_HOST:$INGRESS_PORT/pages/chat.html` as seen above
-* The chat application is fully functional: you can connect a couple of users, add friends, disconnect/reconnect users.
+* The Chat application is fully functional: you can connect a couple of users, add friends, disconnect/reconnect users.
 * The navigation guide is explained at <<../README.adoc#chatui-navigation-guide,Chat navigation guide>>
 +
 {nbsp} +

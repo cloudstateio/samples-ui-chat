@@ -16,7 +16,7 @@ endif::[]
 [[cs-chat-sample-overview]]
 == Overview
 
-This is a sample application showing an example of using Cloudstate to build a chat application in Node.js. The application consists of three services:
+This is a sample application showing an example of using Cloudstate to build a Chat application in Node.js. The application consists of three services:
 
 * A stateless service `chat`
 * A stateful Entity based service `friends`
@@ -35,7 +35,7 @@ image::docs/images/ChatUI_NavigationGuide.png[Chat Application - Navigation Guid
 
 [horizontal]
 chat-ui:: directory containing the code of the stateless service `chat`. This code is written in TypeScript, and run as a Node.js server.
-deploy:: directory containing the yaml files to deploy all the services composing the Chat application. The target cluster could be your own Kubernetes cluster or https://docs.lbcs.dev/index.html[Lightbend Cloudstate managed service]
+deploy:: directory containing the yaml files to deploy all the services composing the Chat application. The target cluster could be your own Kubernetes cluster or https://docs.lbcs.dev/index.html[Lightbend Cloudstate]
 
 The code of the backend services `Friends` and `Presence` is separate from the UI code. This is intentional to demonstrate the polyglot aspect of Cloudstate services. They can seamlessly interact regardless of the programming language used to implement the service. Below are the available implementations. You can choose any combination for deployment. For example, `Friends` service in Javascript and `Presence` service in Java.
 
@@ -56,19 +56,27 @@ The code of the backend services `Friends` and `Presence` is separate from the U
 
 https://github.com/cloudstateio/samples-js-chat/blob/master/README.adoc#js-devenv-setup-for-cloudstate[Javascript Dev environment setup for Cloudstate]
 
-=== Infrastructure
+[[prereq-docker-registry]]
+=== Docker repository
 
-* A Docker repository that the Kubernetes cluster has the necessary credentials to pull from. You can get a free Docker registry at https://hub.docker.com/
+You must package your services into docker images and publish these images in a Docker registry. At deployment time, the Kubernetes cluster will pull the images from this registry. You can get a free Docker registry at https://hub.docker.com/
 
-For the deployment, there are two possible choices. Below we highlight the main characteristic of each deployment approach. Further details about prerequisites and infrastructure preparation would be discussed further in the <<deployment,Deployment>> section. 
 
-==== Deploy on Lighbend Cloudstate managed service
+=== Self-hosting or Managed hosting?
 
-Basically, all you need is to open an account with Lightbend Cloudstate hosting service. Then install the "Cloudstate CLI" tool and you are good to deploy. There is no need to provide any local infrastructure.
+For the deployment, there are two possible choices. Below we highlight the main characteristics of each deployment approach. Details about prerequisites and infrastructure preparation would be discussed further in the <<deployment,Deployment>> section. 
 
-The deployment is as simple as applying the yaml configuration files. Lightbend Cloudstate managed service will take care of the hosting, configuration and maintenance of your service. 
+==== Managed hosting
 
-==== Deploy on your own Kubernetes cluster
+This deployment approach doesn't require any local infrastructure. Lightbend Cloudstate will take care of the hosting, configuration and maintenance of your services. The deployment prodedure is pretty minimal:
+
+* Open an account with Lightbend Cloudstate
+* Install the "Cloudstate CLI" tool `csctl`
+
+And that's it. Then you just use `csctl` to deploy the your services that you had published in your Docker registry.
+
+ 
+==== Self-hosting
 
 In case you prefer to host your own services. You need to provide a Kubernetes cluster. This cluster could be local or cloud-based and must fulfill the following requirements:
 
@@ -79,7 +87,7 @@ In case you prefer to host your own services. You need to provide a Kubernetes c
 
 == Build Docker images
 
-Before beginning the deployment, the various microservices composing the chat application must be packaged each into their own docker image, and published to your docker registry.
+Before beginning the deployment, each of the various microservices composing the Chat application must be packaged into their own docker image, and published to your Docker registry.
 
 === Building the Friends & Presence services
 * https://github.com/cloudstateio/samples-js-chat/blob/master/friends/README.adoc#building-the-friends-service[Building the Friends service]
@@ -88,7 +96,7 @@ Before beginning the deployment, the various microservices composing the chat ap
 
 === Building the Chat-UI service
 
-The code below assumes that your docker registry is named `mydockerregistry`. Please replace it with your DockerID (which you have registed at https://hub.docker.com/ as mentioned in <<infrastructure>>
+The code below assumes that your Docker registry is named `mydockerregistry`. Please replace it with your own DockerID (which you have registed at https://hub.docker.com/ as mentioned in <<prereq-docker-registry,Prerequisites - Docker repository>>
 
 
 [source,shell]
@@ -117,11 +125,11 @@ docker push $DOCKER_PUBLISH_TO/samples-js-chat-ui:latest
 
 === Testing the Chat-UI service
 
-In order to make the deployment of the Chat UI consistent with all the other services composing the Chat application. The Node.js server running the UI code is wrapped in a Cloudstate stateless service.
+To make the deployment of the Chat UI consistent with all the other services composing the Chat application, the Node.js server running the UI code is wrapped in a Cloudstate stateless service.
 
 As such, the UI must be accessed via a Cloudstate proxy. The procedure is similar to that of https://github.com/cloudstateio/samples-js-chat/blob/master/friends/README.adoc#testing-friends-service[Testing Friends service]. Which means:
 
-* Start a Cloudstate proxy (docker image prebuilt for us by Cloudstate dev team)
+* Start a Cloudstate proxy (docker image prebuilt for us by the Cloudstate project)
 * Start the docker image of the Chat UI we have just built
 * Access the UI via the Cloudstate proxy, which expose the Chat-UI service on `http://localhost:9000/pages/chat.html`
 
@@ -149,13 +157,12 @@ curl --silent http://localhost:9000/pages/chat.html | grep -E "<title>.+"
 <title>Cloudstate Chat Example</title>
 ----
 
-NOTE: The test is successful if the Chat-UI returns an HTML page of the chat room home page. In case you opened the chat homepage in the browser. Please be aware that the chat application itself is NOT YET fully functional. Because the supporting services `Friends` and `Presence` are not yet deployed.
+NOTE: The test is successful if the Chat-UI returns an HTML page of the chat room home page. In case you opened the chat homepage in the browser. Please be aware that the Chat application itself is NOT YET fully functional. Because the supporting services `Friends` and `Presence` are not yet deployed.
 
 [[deployment]]
 == Deployment
 
 We have built, tested and published 3 dockers images of the 3 services: Chat-UI, Friends, Presence. Now we are ready to deploy the Chat application. There are two possible tracks for deploying your service:
 
-. <<docs/deploy-cloudstate-cluster.adoc#,Deploy on Cloudstate cluster>> (Lightbend Cloudstate hosting platform)
+. <<docs/deploy-lightbend-cloudstate.adoc#,Deploy on Lightbend Cloudstate>>
 . <<docs/deploy-self-hosted.adoc#,Deploy on your own Kubernetes cluster>>
-

@@ -16,7 +16,7 @@ endif::[]
 [[cs-chat-sample-overview]]
 == Overview
 
-This is a sample application showing an example of using CloudState to build a chat application in Node.js. The application consists of three services:
+This is a sample application showing an example of using Cloudstate to build a chat application in Node.js. The application consists of three services:
 
 * A stateless service `chat`
 * A stateful Entity based service `friends`
@@ -26,7 +26,7 @@ image::docs/images/Cloudstate_Sample_ChatApplication.png[Cloudstate Sample - Cha
 {nbsp} +
 
 [[chatui-navigation-guide]]
-The UI is designed to model chat room where multiple users can connect/disconnect and exchanging chat messages. You simulate the chat room activities in one single browser window. This makes it easy to see the real time interactions, server-side pushes etc, without needing to open many browser tabs. Each user is a separate iframe with a separate websocket connection. The screen below shows the possible actions to interact with the UI.
+The UI is designed to model a chat room where multiple users can connect/disconnect and exchanging chat messages. You simulate the chat room activities in one single browser window. This makes it easy to see the real time interactions, server-side pushes etc, without needing to open many browser tabs. Each user is a separate iframe with a separate websocket connection. The screen below shows the possible actions to interact with the UI.
 
 image::docs/images/ChatUI_NavigationGuide.png[Chat Application - Navigation Guide, align="center"]
 {nbsp} +
@@ -34,12 +34,12 @@ image::docs/images/ChatUI_NavigationGuide.png[Chat Application - Navigation Guid
 == Code implementation
 
 [horizontal]
-chat-ui:: directory containing the code of the stateless service `chat`. This code is written in TypeScript, and run as Node.js server.
+chat-ui:: directory containing the code of the stateless service `chat`. This code is written in TypeScript, and run as a Node.js server.
 deploy:: directory containing the yaml files to deploy all the services composing the Chat application. The target cluster could be your own Kubernetes cluster or https://docs.lbcs.dev/index.html[Lightbend Cloudstate managed service]
 
 The code of the backend services `Friends` and `Presence` is separate from the UI code. This is intentional to demonstrate the polyglot aspect of Cloudstate services. They can seamlessly interact regardless of the programming language used to implement the service. Below are the available implementations. You can choose any combination for deployment. For example, `Friends` service in Javascript and `Presence` service in Java.
 
-=== Javascript implementation
+=== JavaScript implementation
 
 * https://github.com/cloudstateio/samples-js-chat/tree/master/friends[Friends service]
 * https://github.com/cloudstateio/samples-js-chat/tree/master/presence[Presence service]
@@ -68,7 +68,7 @@ Basically, all you need is to open an account with Lightbend Cloudstate hosting 
 
 The deployment is as simple as applying the yaml configuration files. Lightbend Cloudstate managed service will take care of the hosting, configuration and maintenance of your service. 
 
-==== Deploy on your own Kubernetes
+==== Deploy on your own Kubernetes cluster
 
 In case you prefer to host your own services. You need to provide a Kubernetes cluster. This cluster could be local or cloud-based and must fulfill the following requirements:
 

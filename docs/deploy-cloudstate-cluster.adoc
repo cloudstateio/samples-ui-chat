@@ -50,14 +50,14 @@ Instructions: https://docs.lbcs.dev/getting-started/lightbend-account.html[Using
 
 === Install Cloudstate CLI
 
-`csctl` is the command line tool that you will use to deploy application on your Cloudstate cluster. Instructions: https://docs.lbcs.dev/getting-started/set-up-development-env.html#_cloudstate_cli[Install Cloudstate CLI]
+`csctl` is the command line tool that you will use to deploy an application on your Cloudstate cluster. Instructions: https://docs.lbcs.dev/getting-started/set-up-development-env.html#_cloudstate_cli[Install Cloudstate CLI]
 
-The `csctl` minimum version required is 0.0.9 which you can verify by:
+The `csctl` minimum version required is 0.0.12 which you can verify by:
 
 [source,shell]
 ----
 $ csctl version
-0.0.9
+0.0.12
 ----
 
 
@@ -98,7 +98,7 @@ $ csctl project list
 ----
 
 IMPORTANT:: A newly created project is in `pending` status, ie. you cannot yet deploy on your Cloudstate cluster. 
-Once the project is activated by Cloudstate administrator (within a short moment). Its status will change to `active`, at which point, you can begin to deploy your services. In case it takes long time for your project to get activated, you can https://docs.lbcs.dev/getting-started/create-project.html#_project_status[[notify Cloudstate admin]
+Once the project is activated by a Cloudstate administrator (within a short moment). Its status will change to `active`, at which point, you can begin to deploy your services. In case it takes long time for your project to get activated, you can https://docs.lbcs.dev/getting-started/create-project.html#_project_status[notify Cloudstate admin]
 
 
 == Deployment
@@ -118,7 +118,7 @@ $ csctl services deploy chat-ui  cloudstateio/samples-js-chat-ui:latest
 $ csctl services deploy friends  cloudstateio/samples-js-chat-friends:latest
 $ csctl services deploy presence cloudstateio/samples-js-chat-presence:latest
 
-# give the cluster a minute or two to spin uop the resource and verify
+# give the cluster a minute or two to spin up the resources and verify
 $ csctl services get
 
 # console output

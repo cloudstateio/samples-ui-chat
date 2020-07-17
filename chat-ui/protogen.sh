@@ -1,6 +1,6 @@
 #!/bin/bash
 
-printf "Compiling protobuf definitions:\033[32;5m Cloudstate & Google\033[0m\n"
+printf "Compiling protobuf definitions:\033[0;32m Cloudstate & Google\033[0m\n"
 
 OUT_DIR="./src/_proto"
 PROTOC_GEN_TS_PATH="./node_modules/.bin/protoc-gen-ts"
@@ -17,7 +17,7 @@ protoc \
     node_modules/cloudstate/proto/google/api/annotations.proto \
     node_modules/cloudstate/proto/cloudstate/entity_key.proto
 
-printf "Compiling protobuf definitions (Chat dependent services):\033[32;5m Friends & Presence\033[0m\n"
+printf "Compiling protobuf definitions (Chat dependent services):\033[0;32m Friends & Presence\033[0m\n"
 
 protoc \
     --proto_path=./chatapp_protos \

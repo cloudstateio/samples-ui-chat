@@ -1,13 +1,13 @@
 ## Chat Sample - Dependent Services
 
-This directory contains the protobuf definition for the 3 services composing the chat application:
+This directory contains the protobuf definition for the 3 services composing the Chat application:
 
-chat-ui.proto:: GRPC Service descriptor for Chat-UI service. It is compiled by `npm run-script build`
+chat-ui.proto:: gRPC Service descriptor for Chat-UI service. It is compiled by `npm run-script build`
 
-friends.proto:: GRPC Service descriptor for the `Friends` service which will be invoked by Chat-UI. It is compiled by `./protogen.sh`
+friends.proto:: gRPC Service descriptor for the `Friends` service which will be invoked by Chat-UI. It is compiled by `./protogen.sh`
 {nbsp} +
 The *.proto source is taken from https://github.com/cloudstateio/samples-js-chat/blob/master/friends/friends.proto[samples-js-chat/friends/friends.proto]
 
-presence.proto:: GRPC Service descriptor for the `Presence` service which will be invoked by Chat-UI. It is compiled by `./protogen.sh`
+presence.proto:: gRPC Service descriptor for the `Presence` service which will be invoked by Chat-UI. It is compiled by `./protogen.sh`
 {nbsp} +
 The *.proto source is taken from https://github.com/cloudstateio/samples-js-chat/blob/master/presence/presence.proto[samples-js-chat/presence/presence.proto]

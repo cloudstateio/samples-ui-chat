@@ -37,7 +37,7 @@ image::docs/images/ChatUI_NavigationGuide.png[Chat Application - Navigation Guid
 chat-ui:: directory containing the code of the stateless service `chat`. This code is written in TypeScript, and run as a Node.js server.
 deploy:: directory containing the yaml files to deploy all the services composing the Chat application. The target cluster could be your own Kubernetes cluster or https://docs.lbcs.dev/index.html[Lightbend Cloudstate]
 
-The code of the backend services `Friends` and `Presence` is separate from the UI code. This is intentional to demonstrate the polyglot aspect of Cloudstate services. They can seamlessly interact regardless of the programming language used to implement the service. Below are the available implementations. You can choose any combination for deployment. For example, `Friends` service in Javascript and `Presence` service in Java.
+The code of the backend services `Friends` and `Presence` is separate from the UI code. This is intentional to demonstrate the polyglot aspect of Cloudstate services. They can seamlessly interact regardless of the programming language used to implement the service. Below are the available implementations. You can choose any combination for deployment. For example, `Friends` service in JavaScript and `Presence` service in Java.
 
 === JavaScript implementation
 
@@ -52,9 +52,9 @@ The code of the backend services `Friends` and `Presence` is separate from the U
 
 == Prerequisites
 
-=== Javascript Dev environment
+=== JavaScript Dev environment
 
-https://github.com/cloudstateio/samples-js-chat/blob/master/README.adoc#js-devenv-setup-for-cloudstate[Javascript Dev environment setup for Cloudstate]
+https://github.com/cloudstateio/samples-js-chat/blob/master/README.adoc#js-devenv-setup-for-cloudstate[JavaScript Dev environment setup for Cloudstate]
 
 [[prereq-docker-registry]]
 === Docker repository
@@ -139,7 +139,7 @@ As such, the UI must be accessed via a Cloudstate proxy. The procedure is simila
 # exposing the CS proxy port 9000 to the same 9000 port on the host machine
 # NOTE: ignore the connection errors b/c the `user-function` is not yet started
 docker run -it --rm --name cloudstate-proxy -p 9000:9000 \
-  cloudstateio/cloudstate-proxy-dev-mode \
+  cloudstateio/cloudstate-proxy-dev-mode:0.5.1 \
   -Dcloudstate.proxy.user-function-port=8080 \
   -Dcloudstate.proxy.user-function-interface=samples-js-chat-ui
 

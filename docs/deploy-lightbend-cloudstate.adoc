@@ -115,33 +115,73 @@ $ csctl docker list-credentials
 
 In case you don't have your own docker images, you can still proceed with the deployment, using the images we have prebuilt in the `cloudstateio` registry on docker hub. To use your own docker images, just replace `cloudstateio` with your own dockerId or Docker registry Id.
 
-IMPORTANT:: For the consistency of the documentation, please use the suggested service names: `chat-ui`, `friends`, `presence`
+=== Deploying chat-ui service
+
+We deploy the `chat-ui` first as this is the entrypoint of the Chat application
 
 [source,shell]
 ----
 # Syntax: $ csctl services deploy <serviceName> <dockerImageCoordinatess>
 $ csctl services deploy chat-ui  cloudstateio/samples-js-chat-ui:latest
-$ csctl services deploy friends  cloudstateio/samples-js-chat-friends:latest
-$ csctl services deploy presence cloudstateio/samples-js-chat-presence:latest
 
-# give the cluster a minute or two to spin up the resources and verify
+# give the cluster about a minute to spin up the resources
+# then verify that the service has `STATUS=Ready`
 $ csctl services get
 
 # console output
-NAME       AGE    REPLICAS   STATUS   DESCRIPTION
-chat-ui    117s   1          Ready
-friends    110s   1          Ready
-presence   105s   1          Ready
+NAME      AGE    REPLICAS   STATUS   DESCRIPTION
+chat-ui   106s   1          Ready
 ----
 
-The entrypoint to the Chat application is the `chat-ui` service, which needs to be exposed to allow external access. Notice the service entrypoint given in the console output, `little-cloud-3590.us-east1.apps.lbcs.io` in our example below.
+
+The `chat-ui` service needs to be exposed to allow external access. Notice the service entrypoint given in the console output. 
 
 [source,shell]
 ----
 $ csctl service expose chat-ui
 
 # console output
-Service 'chat-ui' was successfully exposed at: little-cloud-3590.us-east1.apps.lbcs.io
+Service 'chat-ui' was successfully exposed at: long-rice-1620.us-east1.apps.cloudstate.com
+----
+
+=== Deplopying dependent services
+
+Next we deploy the backend services: 
+
+[source,shell]
+----
+$ csctl services deploy friends  cloudstateio/samples-js-chat-friends:latest
+$ csctl services deploy presence cloudstateio/samples-js-chat-presence:latest
+
+# wait about a minute and check that all services are `Ready`
+$ csctl services get
+
+# console output
+NAME       AGE     REPLICAS   STATUS   DESCRIPTION
+chat-ui    10m     1          Ready
+friends    2m14s   1          Ready
+presence   2m5s    1          Ready
+----
+
+
+WARNING: Normally, this is all we need to do to deploy the Chat application. For now, `csctl` needs some workarounds to help the `chat-ui` to route service calls to dependant services. The step shown below is a temporary workaround. In the next version of `csctl` this step will be unnecessary.
+{nbsp} +
+{nbsp} +
+Route all calls using the same endpoint as `chat-ui`, which was given by `csctl service expose chat-ui` in the previous step. Internally, Lightbend Cloudstate will forward the calls to `friends` and `presence` services to the appropriate endpoints.
+{nbsp} +
+{nbsp} +
+We also need to know the fully qualified name of the service which are given by the gRPC service descriptors https://github.com/cloudstateio/samples-ui-chat/blob/master/chat-ui/chatapp_protos/friends.proto#L28[friends.proto] and https://github.com/cloudstateio/samples-ui-chat/blob/master/chat-ui/chatapp_protos/presence.proto#L18[presence.proto].
+
+
+[source,shell]
+----
+$ csctl service expose friends \
+  --hostname long-rice-1620.us-east1.apps.cloudstate.com \
+  --uri-prefix=/cloudstate.samples.chat.friends.Friends/
+
+$ csctl service expose presence \
+  --hostname long-rice-1620.us-east1.apps.cloudstate.com \
+  --uri-prefix=/cloudstate.samples.chat.presence.Presence/
 ----
 
 
@@ -150,7 +190,7 @@ Service 'chat-ui' was successfully exposed at: little-cloud-3590.us-east1.apps.l
 By design, the route to access the Chat UI is `/pages/chat.html`. Using the chat-ui service entrypoint obtained when running `csctl service expose chat-ui`, our Chat application is accessible at:
 
 ----
-https://little-cloud-3590.us-east1.apps.lbcs.io/pages/chat.html
+https://long-rice-1620.us-east1.apps.cloudstate.com/pages/chat.html
 ----
 
 That's it. Now enjoy the app, the navigation guide is explained at <<../README.adoc#chatui-navigation-guide,Chat navigation guide>>

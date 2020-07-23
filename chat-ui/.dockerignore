@@ -1,0 +1,5 @@
+node_modules
+public/build
+src/_proto
+user-function.desc
+docker-compose.yaml

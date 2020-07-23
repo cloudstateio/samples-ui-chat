@@ -1,5 +1,5 @@
 {
-  "name": "cloudstate-js-chat-chat",
+  "name": "cloudstate-js-chat-chatui",
   "version": "1.0.0",
   "description": "CloudState js-chat sample application chat stateful function",
   "keywords": [
@@ -7,9 +7,9 @@
     "cloudstate",
     "crdt"
   ],
-  "homepage": "https://github.com/cloudstateio/samples-js-chat",
+  "homepage": "https://github.com/cloudstateio/samples-ui-chat",
   "bugs": {
-    "url": "https://github.com/cloudstateio/samples-js-chat/issues"
+    "url": "https://github.com/cloudstateio/samples-ui-chat/issues"
   },
   "license": "Apache-2.0",
   "author": {
@@ -19,7 +19,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/cloudstateio/samples-js-chat",
+    "url": "https://github.com/cloudstateio/samples-ui-chat",
     "directory": "chat"
   },
   "engineStrict": true,
@@ -63,15 +63,17 @@
     "webpack": "^4.41.5",
     "webpack-cli": "^3.3.10",
     "webpack-dev-server": "^3.1.7",
-    "mobx-react-devtools": "^6.0.3"
+    "mobx-react-devtools": "^6.0.3",
+    "grpc-tools": "^1.9.0"
   },
   "scripts": {
-    "prestart": "compile-descriptor ./chatapp_protos/chat-ui.proto",
-    "start": "node index.js",
-    "start-no-prestart": "node index.js",
-    "build": "webpack --config webpack.config.js",
-    "dockerbuild": "docker build -t ${DOCKER_PUBLISH_TO:-cloudstateio}/samples-js-chat-chat:latest .",
-    "dockerpush": "docker push ${DOCKER_PUBLISH_TO:-cloudstateio}/samples-js-chat-chat:latest",
-    "dockerbuildpush": "npm run dockerbuild && npm run dockerpush"
+    "precompile:protoc": "mkdirp src/_proto",
+    "compile:protoc:cloudstate": "grpc_tools_node_protoc --proto_path=node_modules/cloudstate/proto --plugin=protoc-gen-ts=node_modules/.bin/protoc-gen-ts --js_out=import_style=commonjs,binary:src/_proto --ts_out=src/_proto node_modules/cloudstate/proto/google/api/http.proto node_modules/cloudstate/proto/google/api/httpbody.proto node_modules/cloudstate/proto/google/api/annotations.proto node_modules/cloudstate/proto/cloudstate/entity_key.proto",
+    "compile:protoc:chat-dependent-svc": "grpc_tools_node_protoc --proto_path=./chatapp_protos --plugin=protoc-gen-ts=node_modules/.bin/protoc-gen-ts --js_out=import_style=commonjs,binary:src/_proto --ts_out=service=grpc-web:src/_proto -I node_modules/cloudstate/proto/ friends.proto presence.proto",
+    "compile:protoc": "npm run compile:protoc:cloudstate && npm run compile:protoc:chat-dependent-svc",
+    "compile:descriptor": "compile-descriptor ./chatapp_protos/chat-ui.proto",
+    "webpack": "webpack --config webpack.config.js",
+    "build": "npm run compile:protoc && npm run compile:descriptor && npm run webpack",
+    "start": "node index.js"
   }
 }

@@ -83,10 +83,10 @@ $ csctl auth login
 $ csctl project new chat-application "Chat room app built with Cloudstate services"
 
 Created project b43197f4-5c75-4bac-af18-8b2be7460696.
-To make this the currently active project, run: 'csctl config set project b43197f4-5c75-4bac-af18-8b2be7460696'
+To make this the currently active project, run: 'csctl config set project chat-application'
 
 #===STEP3: set the new Cloudstate project as "current"
-$ csctl config set project b43197f4-5c75-4bac-af18-8b2be7460696
+$ csctl config set project chat-application
 
 #===STEP3: Verify project created OK
 $ csctl project list

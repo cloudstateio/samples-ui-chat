@@ -52,7 +52,7 @@ Instructions: https://docs.lbcs.dev/getting-started/lightbend-account.html[Using
 
 `csctl` is the command line tool that you will use to deploy an application on your Cloudstate cluster. Instructions: https://docs.lbcs.dev/getting-started/set-up-development-env.html#_cloudstate_cli[Install Cloudstate CLI]
 
-The `csctl` minimum version required is 0.0.12 which you can verify by:
+The `csctl` minimum version required is 0.0.16 which you can verify by:
 
 [source,shell]
 ----

@@ -82,22 +82,33 @@ $ csctl auth login
 # NOTE: project-friendly-name: no space, only lower case and dash
 $ csctl project new chat-application "Chat room app built with Cloudstate services"
 
-Created project b43197f4-5c75-4bac-af18-8b2be7460696.
+Created project chat-application.
 To make this the currently active project, run: 'csctl config set project chat-application'
+  NAME               DESCRIPTION                                    STATUS    ID
+  chat-application   Chat room app built with Cloudstate services   pending   3d864594-fefe-4708-82da-da842e4cdcde
 
 #===STEP3: set the new Cloudstate project as "current"
 $ csctl config set project chat-application
 
-#===STEP3: Verify project created OK
-$ csctl project list
-
-  NAME                  DESCRIPTION                                    STATUS    ID
-* chat-application      Chat room app built with Cloudstate services   pending   b43197f4-5c75-4bac-af18-8b2be7460696
+Project set to chat-application
 ----
 
 IMPORTANT:: A newly created project is in `pending` status, ie. you cannot yet deploy on your Cloudstate cluster. 
 Once the project is activated by a Cloudstate administrator (within a short moment). Its status will change to `active`, at which point, you can begin to deploy your services. In case it takes long time for your project to get activated, you can https://docs.lbcs.io/getting-started/create-project.html#_project_status[notify Cloudstate admin]
 
+Confirm your Cloudstate project is ready for deployment:
+
+* The project status is `active`
+* The project is set as current. This helps to skip the `--project` parameter in `csctl` commands when deploying on your Cloudstate cluster
+
+[source,shell]
+----
+$ csctl project list
+
+# Notice the `*` (marker for current project) in front of the project name
+  NAME               DESCRIPTION                                    STATUS   ID
+* chat-application   Chat room app built with Cloudstate services   active   3d864594-fefe-4708-82da-da842e4cdcde
+----
 
 == Deployment
 
@@ -113,7 +124,7 @@ $ csctl docker add-credentials
 $ csctl docker list-credentials
 ----
 
-In case you don't have your own docker images, you can still proceed with the deployment, using the images we have prebuilt in the `cloudstateio` registry on docker hub. To use your own docker images, just replace `cloudstateio` with your own dockerId or Docker registry Id.
+In case you don't have your own docker images, you can still proceed with the deployment, using the images prebuilt by the Cloudstate project team.
 
 === Deploying chat-ui service
 
@@ -122,15 +133,15 @@ We deploy the `chat-ui` first as this is the entrypoint of the Chat application
 [source,shell]
 ----
 # Syntax: $ csctl services deploy <serviceName> <dockerImageCoordinatess>
-$ csctl services deploy chat-ui  cloudstateio/samples-js-chat-ui:latest
+$ csctl services deploy chat-ui lightbend-docker-registry.bintray.io/cloudstate-samples/chat-ui:latest
 
-# give the cluster about a minute to spin up the resources
+# give the cluster about a minute to provision the resources
 # then verify that the service has `STATUS=Ready`
 $ csctl services get
 
 # console output
-NAME      AGE    REPLICAS   STATUS   DESCRIPTION
-chat-ui   106s   1          Ready
+NAME      AGE   REPLICAS   STATUS   DESCRIPTION
+chat-ui   86s   1          Ready
 ----
 
 
@@ -141,7 +152,7 @@ The `chat-ui` service needs to be exposed to allow external access. Notice the s
 $ csctl service expose chat-ui
 
 # console output
-Service 'chat-ui' was successfully exposed at: long-rice-1620.us-east1.apps.cloudstate.com
+Service 'chat-ui' was successfully exposed at: little-cherry-4517.us-east1.apps.lbcs.io
 ----
 
 === Deplopying dependent services
@@ -150,8 +161,8 @@ Next we deploy the backend services:
 
 [source,shell]
 ----
-$ csctl services deploy friends  cloudstateio/samples-js-chat-friends:latest
-$ csctl services deploy presence cloudstateio/samples-js-chat-presence:latest
+$ csctl services deploy friends  lightbend-docker-registry.bintray.io/cloudstate-samples/chat-friends-js:latest
+$ csctl services deploy presence lightbend-docker-registry.bintray.io/cloudstate-samples/chat-presence-js:latest
 
 # wait about a minute and check that all services are `Ready`
 $ csctl services get
@@ -176,11 +187,11 @@ We also need to know the fully qualified name of the service which are given by 
 [source,shell]
 ----
 $ csctl service expose friends \
-  --hostname long-rice-1620.us-east1.apps.cloudstate.com \
+  --hostname little-cherry-4517.us-east1.apps.lbcs.io \
   --uri-prefix=/cloudstate.samples.chat.friends.Friends/
 
 $ csctl service expose presence \
-  --hostname long-rice-1620.us-east1.apps.cloudstate.com \
+  --hostname little-cherry-4517.us-east1.apps.lbcs.io \
   --uri-prefix=/cloudstate.samples.chat.presence.Presence/
 ----
 
@@ -190,7 +201,7 @@ $ csctl service expose presence \
 By design, the route to access the Chat UI is `/pages/chat.html`. Using the chat-ui service entrypoint obtained when running `csctl service expose chat-ui`, our Chat application is accessible at:
 
 ----
-https://long-rice-1620.us-east1.apps.cloudstate.com/pages/chat.html
+https://little-cherry-4517.us-east1.apps.lbcs.io/pages/chat.html
 ----
 
 That's it. Now enjoy the app, the navigation guide is explained at <<../README.adoc#chatui-navigation-guide,Chat navigation guide>>

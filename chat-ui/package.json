@@ -1,5 +1,5 @@
 {
-  "name": "cloudstate-js-chat-chatui",
+  "name": "cloudstate-sample-chat-ui",
   "version": "1.0.0",
   "description": "CloudState js-chat sample application chat stateful function",
   "keywords": [

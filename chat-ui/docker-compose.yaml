@@ -1,4 +1,4 @@
-version: "3.8"
+version: "3.2"
 
 services:
   #------------------------------------------------------------------------
@@ -19,7 +19,7 @@ services:
   # which implement the business logic of the Chat application
   #------------------------------------------------------------------------
   chatui-userfunc:
-    image: ${DOCKER_PUBLISH_TO-cloudstateio}/samples-js-chat-ui:latest
+    image: lightbend-docker-registry.bintray.io/cloudstate-samples/chat-ui-js:latest
 
     # use the same network stack than the container of the Cloudstate proxy
     # Similar to a deployment on Kubernetes where

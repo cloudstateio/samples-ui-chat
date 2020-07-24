@@ -78,7 +78,7 @@ And that's it. Then you just use `csctl` to deploy the your services that you ha
  
 ==== Self-hosting
 
-In case you prefer to host your own services. You need to provide a Kubernetes cluster. This cluster could be local or cloud-based and must fulfill the following requirements:
+In case you prefer to host your own services, you need to provide a Kubernetes cluster. This cluster could be local or cloud-based and must fulfill the following requirements:
 
 * A Kubernetes cluster, with 1.13 as the minimum required version
 * An ingress controller with a Layer7 Load Balancer ability

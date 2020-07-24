@@ -96,7 +96,7 @@ Before beginning the deployment, each of the various microservices composing the
 
 === Building the Chat-UI service
 
-The code below assumes that your Docker registry is named `mydockerregistry`. Please replace it with your own DockerID (which you have registed at https://hub.docker.com/ as mentioned in <<prereq-docker-registry,Prerequisites - Docker repository>>
+The code below assumes that your Docker registry is named `mydockerregistry`. Please replace it with your own DockerID (which you might have registed at https://hub.docker.com/ as mentioned in <<prereq-docker-registry,Prerequisites - Docker repository>>
 
 
 [source,shell]

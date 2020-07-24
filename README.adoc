@@ -107,13 +107,13 @@ cd ./chat-ui
 DOCKER_PUBLISH_TO=mydockerregistry
 
 # build docker image
-docker build . -t $DOCKER_PUBLISH_TO/chat-ui-js:latest
+docker build . -t $DOCKER_PUBLISH_TO/chat-ui:latest
 
 # authenticate with your Docker registry
 docker login
 
 # push the docker image to your registry
-docker push $DOCKER_PUBLISH_TO/chat-ui-js:latest
+docker push $DOCKER_PUBLISH_TO/chat-ui:latest
 ----
 
 === Testing the Chat-UI service
@@ -122,7 +122,7 @@ To make the deployment of the Chat UI consistent with all the other services com
 
 As such, the UI must be accessed via a Cloudstate proxy. The procedure is similar to that of https://github.com/cloudstateio/samples-js-chat/blob/master/friends/README.adoc#testing-friends-service[Testing Friends service].
 
-* Edit https://github.com/cloudstateio/samples-ui-chat/blob/master/chat-ui/docker-compose.yaml[docker-compose.yaml] to replace the prebuilt image `chat-ui-js` by the docker image you have just published in the previous step.
+* Edit https://github.com/cloudstateio/samples-ui-chat/blob/master/chat-ui/docker-compose.yaml[docker-compose.yaml] to replace the prebuilt image `chat-ui` by the docker image you have just published in the previous step.
 * Start the docker images of both the Cloudstate proxy and the `chat-ui` service
 * Access the Chat homepage via the Cloudstate proxy, which exposes the Chat-UI service on `http://localhost:9003/pages/chat.html`
 

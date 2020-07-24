@@ -57,7 +57,7 @@ The `csctl` minimum version required is 0.0.16 which you can verify by:
 [source,shell]
 ----
 $ csctl version
-0.0.12
+0.0.16
 ----
 
 

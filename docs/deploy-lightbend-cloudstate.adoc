@@ -37,7 +37,7 @@ We are now ready to deploy the Chat application, which we have chosen to deploy 
 
 The main requirement is to have a Lightbend Cloudstate account and the Cloudstate CLI tool installed. With your account, you are granted a cluster, on which you can deploy your services.
 
-The steps are described in https://docs.lbcs.dev/getting-started/index.html[Getting started with Cloudstate]. We have actually already completed the most time consuming steps as we have already built our services. Here we will just need to setup the prerequisites pertaining to the deployment:
+The steps are described in https://docs.lbcs.io/getting-started/index.html[Getting started with Cloudstate]. We have actually already completed the most time consuming steps as we have already built our services. Here we will just need to setup the prerequisites pertaining to the deployment:
 
 
 [[signup-cloudstate-account]]
@@ -45,12 +45,12 @@ The steps are described in https://docs.lbcs.dev/getting-started/index.html[Gett
 
 With your Lightbend Cloudstate account, you will be granted a Kubernetes cluster on the cloud. This cluster is managed by Lightbend Cloudstate. It is customized to host services created using the https://github.com/cloudstateio/cloudstate[Cloudstate library].
 
-Instructions: https://docs.lbcs.dev/getting-started/lightbend-account.html[Using a Cloudstate account]
+Instructions: https://docs.lbcs.io/getting-started/lightbend-account.html[Using a Cloudstate account]
 
 
 === Install Cloudstate CLI
 
-`csctl` is the command line tool that you will use to deploy an application on your Cloudstate cluster. Instructions: https://docs.lbcs.dev/getting-started/set-up-development-env.html#_cloudstate_cli[Install Cloudstate CLI]
+`csctl` is the command line tool that you will use to deploy an application on your Cloudstate cluster. Instructions: https://docs.lbcs.io/getting-started/set-up-development-env.html#_cloudstate_cli[Install Cloudstate CLI]
 
 The `csctl` minimum version required is 0.0.16 which you can verify by:
 
@@ -69,7 +69,7 @@ A Cloudstate project is a space within your Cloudstate cluster. In this space, y
 * Create a Cloudstate project
 * Deploy your services in the project
 
-More details on `csctl` is available at https://docs.lbcs.dev/cli/index.html[csctl reference documentation].
+More details on `csctl` is available at https://docs.lbcs.io/cli/index.html[csctl reference documentation].
 
 
 [source,shell]
@@ -96,7 +96,7 @@ $ csctl project list
 ----
 
 IMPORTANT:: A newly created project is in `pending` status, ie. you cannot yet deploy on your Cloudstate cluster. 
-Once the project is activated by a Cloudstate administrator (within a short moment). Its status will change to `active`, at which point, you can begin to deploy your services. In case it takes long time for your project to get activated, you can https://docs.lbcs.dev/getting-started/create-project.html#_project_status[notify Cloudstate admin]
+Once the project is activated by a Cloudstate administrator (within a short moment). Its status will change to `active`, at which point, you can begin to deploy your services. In case it takes long time for your project to get activated, you can https://docs.lbcs.io/getting-started/create-project.html#_project_status[notify Cloudstate admin]
 
 
 == Deployment

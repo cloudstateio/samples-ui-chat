@@ -94,56 +94,14 @@ Before beginning the deployment, each of the various microservices composing the
 
 * https://github.com/cloudstateio/samples-js-chat/blob/master/presence/README.adoc#building-the-presence-service[Building the Presence service]
 
-=== Building the Chat-UI service
+=== Chat-UI
 
-The code below assumes that your Docker registry is named `mydockerregistry`. Please replace it with your own DockerID (which you might have registed at https://hub.docker.com/ as mentioned in <<prereq-docker-registry,Prerequisites - Docker repository>>
-
-
-[source,shell]
-----
-cd ./chat-ui
-
-# let's assume your DockerID in https://hub.docker.com/ is `mydockerregistry`
-DOCKER_PUBLISH_TO=mydockerregistry
-
-# build docker image
-docker build . -t $DOCKER_PUBLISH_TO/chat-ui:latest
-
-# authenticate with your Docker registry
-docker login
-
-# push the docker image to your registry
-docker push $DOCKER_PUBLISH_TO/chat-ui:latest
-----
-
-=== Testing the Chat-UI service
-
-To make the deployment of the Chat UI consistent with all the other services composing the Chat application, the Node.js server running the UI code is wrapped in a Cloudstate stateless service.
-
-As such, the UI must be accessed via a Cloudstate proxy. The procedure is similar to that of https://github.com/cloudstateio/samples-js-chat/blob/master/friends/README.adoc#testing-friends-service[Testing Friends service].
-
-* Edit https://github.com/cloudstateio/samples-ui-chat/blob/master/chat-ui/docker-compose.yaml[docker-compose.yaml] to replace the prebuilt image `chat-ui` by the docker image you have just published in the previous step.
-* Start the docker images of both the Cloudstate proxy and the `chat-ui` service
-* Access the Chat homepage via the Cloudstate proxy, which exposes the Chat-UI service on `http://localhost:9003/pages/chat.html`
-
-[source,shell]
-----
-$ cd ./chat-ui
-$ docker-compose up
-
-# In a different terminal: use curl (or a browser) to get the Chat-UI home page
-curl --silent http://localhost:9003/pages/chat.html | grep -E "<title>.+"
-
-# console output
-<title>Cloudstate Chat Example</title>
-----
-
-NOTE: The test is successful if the Chat-UI returns an HTML page of the chat room home page. In case you opened the chat homepage in the browser. Please be aware that the Chat application itself is NOT YET fully functional. Because the supporting services `Friends` and `Presence` are not yet deployed.
+You can user our hosted UI here https://static.cloudstate.com/js-chat/index.html
 
 [[deployment]]
 == Deployment
 
-We have built, tested and published 3 dockers images of the 3 services: Chat-UI, Friends, Presence. Now we are ready to deploy the Chat application. There are two possible tracks for deploying your services:
+We have built, tested and published 2 dockers images of the 2 services: Friends, Presence. Now we are ready to deploy the Chat application. There are two possible tracks for deploying your services:
 
 * <<docs/deploy-lightbend-cloudstate.adoc#,Deploy on Lightbend Cloudstate>>
 * <<docs/deploy-self-hosted.adoc#,Deploy on your own Kubernetes cluster>>

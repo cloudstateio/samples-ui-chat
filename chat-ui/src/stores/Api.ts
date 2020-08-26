@@ -12,12 +12,50 @@ export class Api{
     host = window.location.protocol + "//"+window.location.hostname + (window.location.port.length > 0 ? ":" + window.location.port : "");
 
     presenceStreams: {[id:string]:ResponseStream<OnlineStatus>} = {};
-    presenceOnlineStreams: {[id:string]:ResponseStream<Empty>} = {}; 
+    presenceOnlineStreams: {[id:string]:ResponseStream<Empty>} = {};
+
+    friendClient = new FriendsClient(this.host);
+    presenceClient = new PresenceClient(this.host);
+
+    setFriendsHostname = (hostname:string) => {
+        this.friendClient = new FriendsClient(hostname);
+    }
+    setPresenceHostname = (hostname:string) => {
+        this.presenceClient = new PresenceClient(hostname);
+    }
+
   
     setStore = (store) => {
         this.store = store;
     }
 
+    getFriends = (user: User) => {
+        console.log("api getFriends for: ", user);
+        const userpb = new Userpb();
+        userpb.setUser(user.name);
+
+        const metadata = new BrowserHeaders({'custom-header-1': 'value1'});
+        console.log("getFriends request", userpb);
+        return new Promise<void>( (resolve, reject) => {
+            this.friendClient.getFriends(userpb, metadata, (err: ServiceError, response: FriendsList) => {
+                console.log("getFriends response:", response);
+                if (!err) {
+                    response.getFriendsList().map(f => {
+                        console.log("user: " + user.name + "adding friend", f);
+                        this.store.friendStore.addFriend(user, {
+                            name: f.getUser(),
+                            avatar: f.getAvatar()
+                        } as Friend);
+                        this.store.userStore.addUser(user, {name: f.getUser(), avatar: f.getAvatar()} as User);
+                    });
+                    resolve();
+                } else {
+                    console.error("ERROR getting friends", err);
+                    reject(err);
+                }
+            });
+        });
+    }
 
     addFriend = (user: User, friend: Friend) => {
         console.log("api addFriend for: ", {user,friend});
@@ -27,57 +65,63 @@ export class Api{
         const friendRequest = new FriendRequest();
         friendRequest.setUser(user.name);
         friendRequest.setFriend(friendpb);
-        
-        const client = new FriendsClient(this.host);    
+
         const metadata = new BrowserHeaders({'custom-header-1': 'value1'});
         console.log("friend Request", friendRequest);
-        client.add(friendRequest, metadata, (err: ServiceError, response: Empty) => {            
-            console.log("err", err);
-            const userpb = new Userpb();
-            userpb.setUser(user.name)
-            client.getFriends(userpb, metadata,  (err: ServiceError, response: FriendsList) => {
+        return new Promise<void>( (resolve, reject) => {
+            this.friendClient.add(friendRequest, metadata, (err: ServiceError, response: Empty) => {
+                console.log("err", err);
+                const userpb = new Userpb();
+                userpb.setUser(user.name)
+                this.friendClient.getFriends(userpb, metadata, (err: ServiceError, response: FriendsList) => {
                     console.log("getFriends response:", response);
-                    if(!err){
-                        response.getFriendsList().map( f => {
+                    if (!err) {
+                        response.getFriendsList().map(f => {
                             console.log("user: " + user.name + "adding friend", f);
-                            this.store.friendStore.addFriend(user, {name: f.getUser(), avatar: f.getAvatar()} as Friend );
-                            this.store.userStore.addUser(user, {name: f.getUser(), avatar: f.getAvatar()} as User );
+                            this.store.friendStore.addFriend(user, {
+                                name: f.getUser(),
+                                avatar: f.getAvatar()
+                            } as Friend);
+                            this.store.userStore.addUser(user, {name: f.getUser(), avatar: f.getAvatar()} as User);
                         })
-                    }else{
+                    } else {
                         console.error("ERROR getting friends", err);
+                        reject(err);
                     }
                 });
-        });  
-        // Reciprical 
-        const friendRequest2 = new FriendRequest();
-        const friendpb2 = new Friendpb();
-        friendpb2.setUser(user.name);
-        friendpb2.setAvatar(user.avatar);
-        friendRequest2.setUser(friend.name);
-        friendRequest2.setFriend(friendpb2);
-        client.add(friendRequest2, metadata, (err: ServiceError, response: Empty) => {            
-            console.log("err", err);
-            const userpb = new Userpb();
-            userpb.setUser(user.name)
-            client.getFriends(userpb, metadata,  (err: ServiceError, response: FriendsList) => {
-                    if(!err){
-                        response.getFriendsList().map( f => {
+            });
+            // Reciprical
+            const friendRequest2 = new FriendRequest();
+            const friendpb2 = new Friendpb();
+            friendpb2.setUser(user.name);
+            friendpb2.setAvatar(user.avatar);
+            friendRequest2.setUser(friend.name);
+            friendRequest2.setFriend(friendpb2);
+            this.friendClient.add(friendRequest2, metadata, (err: ServiceError, response: Empty) => {
+                console.log("err", err);
+                const userpb = new Userpb();
+                userpb.setUser(user.name)
+                this.friendClient.getFriends(userpb, metadata, (err: ServiceError, response: FriendsList) => {
+                    if (!err) {
+                        response.getFriendsList().map(f => {
                             console.log("user: " + friend.name + "adding friend", user);
-                            this.store.friendStore.addFriend(friend as User, user as Friend );                            
+                            this.store.friendStore.addFriend(friend as User, user as Friend);
                         });
-                    }else{
+                        resolve();
+                    } else {
                         console.error("ERROR getting friends", err);
+                        reject(err);
                     }
                 });
-        });           
+            });
+        });
     }
 
     monitorPresence = (user: User) =>{
         console.log("monitorPresence")
-        const client = new PresenceClient(this.host);    
         const userpb = new UserPesence();
         userpb.setName(user.name);
-        const presenceStream = client.monitor(userpb);
+        const presenceStream = this.presenceClient.monitor(userpb);
         if(this.presenceStreams[user.name])delete this.presenceStreams[user.name];
         this.presenceStreams[user.name] = presenceStream;
         console.log("monitor presence of user: ", user);        
@@ -96,15 +140,13 @@ export class Api{
     addUser = (user: User) => {
         console.log("addUser", user);
         this.store.userStore.addUser( {...user, online: true} );
-        const client = new PresenceClient(this.host);    
         const metadata = new BrowserHeaders({'custom-header-1': 'value1'});
         
         const upb = new Userpb();
         upb.setUser(user.name)
-        const fclient = new FriendsClient(this.host,{debug: true});    
         console.log("getFriends", upb);
         console.log("Calling grpc on host: " + this.host)
-        fclient.getFriends(upb, metadata,  (err: ServiceError, response: FriendsList) => {
+        this.friendClient.getFriends(upb, metadata,  (err: ServiceError, response: FriendsList) => {
             console.log("GOT", response)
             if(!err){
                 response.getFriendsList().map( f => {
@@ -123,7 +165,35 @@ export class Api{
         const userpb = new UserPesence();
         userpb.setName(user.name);
         console.log("connect presence", user);
-        this.presenceOnlineStreams[user.name] = client.connect(userpb, metadata);              
+        this.presenceOnlineStreams[user.name] = this.presenceClient.connect(userpb, metadata);
+    }
+
+    testPresenceConnection = () => {
+        console.log("testPresenceConnection");
+        return new Promise<void>( (resolve, reject) => {
+            const userpb = new UserPesence();
+            userpb.setName("connection-test");
+            let cancelable = setTimeout(() =>{
+                resolve();
+            }, 1000);
+            this.presenceClient.connect(userpb, undefined)
+                .on("status", (status) => {
+                    console.log("status", status);
+                    clearTimeout(cancelable);
+                    if(status.code != 0)reject(status.details)
+                    else resolve();
+                })
+                .on("end", (status) => {
+                    console.log("end", status);
+                    clearTimeout(cancelable);
+                    if(status.code != 0)reject(status.details)
+                    else resolve();
+                }).on("data", (data) => {
+                    console.log("data", data);
+                    clearTimeout(cancelable);
+                    resolve();
+                });
+        });
     }
 
     userOffline = (user: User) => {

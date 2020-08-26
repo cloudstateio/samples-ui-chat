@@ -16,6 +16,7 @@ import Chat from '../controls/Chat';
 import UserDialog from '../controls/UserDialog';
 import { User } from '../stores';
 import UserAvatar from '../controls/UserAvatar';
+import ConfigureDialog from "../controls/ConfigureDialog";
 
 const drawerWidth = 256;
 
@@ -92,6 +93,7 @@ createStyles({
 type State = {
   open: boolean;
   userDialogOpen: boolean;
+  configDialogOpen: boolean;
 };
 
 type Props = {
@@ -104,6 +106,7 @@ class Base extends React.Component<Props & WithStyles<typeof styles>, State> {
   state = {
     open: true,
     userDialogOpen: false,
+    configDialogOpen: true
   };
   
   constructor(props){
@@ -125,6 +128,9 @@ class Base extends React.Component<Props & WithStyles<typeof styles>, State> {
   }
   handelAddUserClose = () =>{
     this.setState({ userDialogOpen: false });
+  }
+  handelConfigClose = () =>{
+    this.setState({ configDialogOpen: false });
   }
   handelOnUserAdd = (user: User) => {   
     this.props.store.api.addUser(user);    
@@ -224,6 +230,7 @@ class Base extends React.Component<Props & WithStyles<typeof styles>, State> {
         </GridList>
         </main>
         <UserDialog store={this.props.store} onClose={this.handelAddUserClose} onUserAdded={this.handelOnUserAdd} open={this.state.userDialogOpen} />
+        <ConfigureDialog store={this.props.store} onClose={this.handelConfigClose} open={this.state.configDialogOpen} />
       </div>      
     );
   }

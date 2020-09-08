@@ -56,6 +56,7 @@
     "@types/history": "4.5.0",
     "@types/node": "^10.12.2",
     "@types/google-protobuf": "^3.2.5",
+    "clean-webpack-plugin": "^3.0.0",
     "concurrently": "^4.1.0",
     "ts-loader": "^6.0.1",
     "ts-protoc-gen": "0.12.0",
@@ -63,6 +64,7 @@
     "webpack": "^4.41.5",
     "webpack-cli": "^3.3.10",
     "webpack-dev-server": "^3.1.7",
+    "webpack-bundle-analyzer": "^3.8.0",
     "mobx-react-devtools": "^6.0.3",
     "grpc-tools": "^1.9.0"
   },
@@ -72,7 +74,7 @@
     "compile:protoc:chat-dependent-svc": "grpc_tools_node_protoc --proto_path=./chatapp_protos --plugin=protoc-gen-ts=node_modules/.bin/protoc-gen-ts --js_out=import_style=commonjs,binary:src/_proto --ts_out=service=grpc-web:src/_proto -I node_modules/cloudstate/proto/ friends.proto presence.proto",
     "compile:protoc": "npm run compile:protoc:cloudstate && npm run compile:protoc:chat-dependent-svc",
     "compile:descriptor": "compile-descriptor ./chatapp_protos/chat-ui.proto",
-    "webpack": "webpack --config webpack.config.js",
+    "webpack": "webpack --config webpack.deploy.config.js",
     "build": "npm run compile:protoc && npm run compile:descriptor && npm run webpack",
     "start": "node index.js"
   }

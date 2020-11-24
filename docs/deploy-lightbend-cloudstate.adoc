@@ -35,7 +35,7 @@ We are now ready to deploy the Chat application, which we have chosen to deploy 
 
 == Prerequisites
 
-* Get [Your Lightbend Cloudstate Account](https://docs.lbcs.io/gettingstarted/account.html)
+* Get [your Lightbend Cloudstate Account](https://docs.lbcs.io/gettingstarted/account.html)
 * Install [akkasls](https://docs.lbcs.io/getting-started/set-up-development-env.html)
 
 [[signup-cloudstate-account]]

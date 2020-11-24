@@ -1,7 +1,7 @@
 = Deploy Cloudstate Chat sample on Lightbend Cloudstate
 Lightbend, 2020
 Version 2.0, 2020-07-06
-:description: Cloudstate Chat Application 
+:description: Cloudstate Chat Application
 :keywords: Lightbend Cloudstate, stateful, serverless, chat-sample, tutorial, LBCS
 :sectnums:
 :toc:
@@ -16,7 +16,7 @@ endif::[]
 [deploy-cscluster-overview]
 == Overview
 
-You have built the 3 microservices composing the Chat application: 
+You have built the 3 microservices composing the Chat application:
 
 * `chat-ui` a stateless service serving the UI
 * `friends` a stateful service to manage the friend list of an user
@@ -35,10 +35,8 @@ We are now ready to deploy the Chat application, which we have chosen to deploy 
 
 == Prerequisites
 
-The main requirement is to have a Lightbend Cloudstate account and the Cloudstate CLI tool installed. With your account, you are granted a cluster, on which you can deploy your services.
-
-The steps are described in https://docs.lbcs.io/getting-started/index.html[Getting started with Cloudstate]. We have actually already completed the most time consuming steps as we have already built our services. Here we will just need to setup the prerequisites pertaining to the deployment:
-
+* Get [your Lightbend Cloudstate Account](https://docs.lbcs.io/gettingstarted/account.html)
+* Install [akkasls](https://docs.lbcs.io/getting-started/set-up-development-env.html)
 
 [[signup-cloudstate-account]]
 === Sign-up Cloudstate account
@@ -50,60 +48,60 @@ Instructions: https://docs.lbcs.io/getting-started/lightbend-account.html[Using 
 
 === Install Cloudstate CLI
 
-`csctl` is the command line tool that you will use to deploy an application on your Cloudstate cluster. Instructions: https://docs.lbcs.io/getting-started/set-up-development-env.html#_cloudstate_cli[Install Cloudstate CLI]
+`akkasls` is the command line tool that you will use to deploy an application on your Cloudstate cluster. Instructions: https://docs.lbcs.io/getting-started/set-up-development-env.html#_cloudstate_cli[Install Cloudstate CLI]
 
-The `csctl` minimum version required is 0.0.16 which you can verify by:
+The `akkasls` minimum version required is 0.0.16 which you can verify by:
 
 [source,shell]
 ----
-$ csctl version
+$ akkasls version
 0.0.16
 ----
 
 
 === Creating a Cloudstate project
 
-A Cloudstate project is a space within your Cloudstate cluster. In this space, you will deploy your Cloudstate-aware application. In this step we use the Cloudstate CLI `csctl` to:
+A Cloudstate project is a space within your Cloudstate cluster. In this space, you will deploy your Cloudstate-aware application. In this step we use the Cloudstate CLI `akkasls` to:
 
 * Login to your Cloudstate cluster (which you got when signing-up for a <<signup-cloudstate-account,Cloudstate account>>)
 * Create a Cloudstate project
 * Deploy your services in the project
 
-More details on `csctl` is available at https://docs.lbcs.io/cli/index.html[csctl reference documentation].
+More details on `akkasls` is available at https://docs.lbcs.io/cli/index.html[akkasls reference documentation].
 
 
 [source,shell]
 ----
-#===STEP1: connect csctl to your Cloudstate account
-$ csctl auth login
+#===STEP1: connect akkasls to your Cloudstate account
+$ akkasls auth login
 
 #===STEP2: create a new Cloudstate project
-# Syntax: csctl project new "project-friendly-name" "Project description"
+# Syntax: akkasls project new "project-friendly-name" "Project description"
 # NOTE: project-friendly-name: no space, only lower case and dash
-$ csctl project new chat-application "Chat room app built with Cloudstate services"
+$ akkasls project new chat-application "Chat room app built with Cloudstate services"
 
 Created project chat-application.
-To make this the currently active project, run: 'csctl config set project chat-application'
+To make this the currently active project, run: 'akkasls config set project chat-application'
   NAME               DESCRIPTION                                    STATUS    ID
   chat-application   Chat room app built with Cloudstate services   pending   3d864594-fefe-4708-82da-da842e4cdcde
 
 #===STEP3: set the new Cloudstate project as "current"
-$ csctl config set project chat-application
+$ akkasls config set project chat-application
 
 Project set to chat-application
 ----
 
-IMPORTANT:: A newly created project is in `pending` status, ie. you cannot yet deploy on your Cloudstate cluster. 
+IMPORTANT:: A newly created project is in `pending` status, ie. you cannot yet deploy on your Cloudstate cluster.
 Once the project is activated by a Cloudstate administrator (within a short moment). Its status will change to `active`, at which point, you can begin to deploy your services. In case it takes long time for your project to get activated, you can https://docs.lbcs.io/getting-started/create-project.html#_project_status[notify Cloudstate admin]
 
 Confirm your Cloudstate project is ready for deployment:
 
 * The project status is `active`
-* The project is set as current. This helps to skip the `--project` parameter in `csctl` commands when deploying on your Cloudstate cluster
+* The project is set as current. This helps to skip the `--project` parameter in `akkasls` commands when deploying on your Cloudstate cluster
 
 [source,shell]
 ----
-$ csctl project list
+$ akkasls project list
 
 # Notice the `*` (marker for current project) in front of the project name
   NAME               DESCRIPTION                                    STATUS   ID
@@ -112,16 +110,16 @@ $ csctl project list
 
 == Deployment
 
-Now we are ready to deploy our Chat application on our Cloudstate cluster. The deployment tool is also `csctl`.
+Now we are ready to deploy our Chat application on our Cloudstate cluster. The deployment tool is also `akkasls`.
 
-At this point you should have all your docker images published in your Docker registry, as mentioned in the <<deploy-cscluster-overview, Overview section>>. In case you Docker registry is private, the `csctl` needs to be configured with the corresponding credentials. 
+At this point you should have all your docker images published in your Docker registry, as mentioned in the <<deploy-cscluster-overview, Overview section>>. In case you Docker registry is private, the `akkasls` needs to be configured with the corresponding credentials.
 
 [source,shell]
 ----
-$ csctl docker add-credentials
+$ akkasls docker add-credentials
 
 # verify
-$ csctl docker list-credentials
+$ akkasls docker list-credentials
 ----
 
 In case you don't have your own docker images, you can still proceed with the deployment, using the images prebuilt by the Cloudstate project team.
@@ -132,12 +130,12 @@ We deploy the `chat-ui` first as this is the entrypoint of the Chat application
 
 [source,shell]
 ----
-# Syntax: $ csctl services deploy <serviceName> <dockerImageCoordinatess>
-$ csctl services deploy chat-ui lightbend-docker-registry.bintray.io/cloudstate-samples/chat-ui:latest
+# Syntax: $ akkasls services deploy <serviceName> <dockerImageCoordinatess>
+$ akkasls services deploy chat-ui lightbend-docker-registry.bintray.io/cloudstate-samples/chat-ui:latest
 
 # give the cluster about a minute to provision the resources
 # then verify that the service has `STATUS=Ready`
-$ csctl services get
+$ akkasls services get
 
 # console output
 NAME      AGE   REPLICAS   STATUS   DESCRIPTION
@@ -145,11 +143,11 @@ chat-ui   86s   1          Ready
 ----
 
 
-The `chat-ui` service needs to be exposed to allow external access. Notice the service entrypoint given in the console output. 
+The `chat-ui` service needs to be exposed to allow external access. Notice the service entrypoint given in the console output.
 
 [source,shell]
 ----
-$ csctl service expose chat-ui
+$ akkasls service expose chat-ui
 
 # console output
 Service 'chat-ui' was successfully exposed at: little-cherry-4517.us-east1.apps.lbcs.io
@@ -157,15 +155,15 @@ Service 'chat-ui' was successfully exposed at: little-cherry-4517.us-east1.apps.
 
 === Deplopying dependent services
 
-Next we deploy the backend services: 
+Next we deploy the backend services:
 
 [source,shell]
 ----
-$ csctl services deploy friends  lightbend-docker-registry.bintray.io/cloudstate-samples/chat-friends-js:latest
-$ csctl services deploy presence lightbend-docker-registry.bintray.io/cloudstate-samples/chat-presence-js:latest
+$ akkasls services deploy friends  lightbend-docker-registry.bintray.io/cloudstate-samples/chat-friends-js:latest
+$ akkasls services deploy presence lightbend-docker-registry.bintray.io/cloudstate-samples/chat-presence-js:latest
 
 # wait about a minute and check that all services are `Ready`
-$ csctl services get
+$ akkasls services get
 
 # console output
 NAME       AGE     REPLICAS   STATUS   DESCRIPTION
@@ -175,10 +173,10 @@ presence   2m5s    1          Ready
 ----
 
 
-WARNING: Normally, this is all we need to do to deploy the Chat application. For now, `csctl` needs some workarounds to help the `chat-ui` to route service calls to dependant services. The step shown below is a temporary workaround. In the next version of `csctl` this step will be unnecessary.
+WARNING: Normally, this is all we need to do to deploy the Chat application. For now, `akkasls` needs some workarounds to help the `chat-ui` to route service calls to dependant services. The step shown below is a temporary workaround. In the next version of `akkasls` this step will be unnecessary.
 {nbsp} +
 {nbsp} +
-Route all calls using the same endpoint as `chat-ui`, which was given by `csctl service expose chat-ui` in the previous step. Internally, Lightbend Cloudstate will forward the calls to `friends` and `presence` services to the appropriate endpoints.
+Route all calls using the same endpoint as `chat-ui`, which was given by `akkasls service expose chat-ui` in the previous step. Internally, Lightbend Cloudstate will forward the calls to `friends` and `presence` services to the appropriate endpoints.
 {nbsp} +
 {nbsp} +
 We also need to know the fully qualified name of the service which are given by the gRPC service descriptors https://github.com/cloudstateio/samples-ui-chat/blob/master/chat-ui/chatapp_protos/friends.proto#L28[friends.proto] and https://github.com/cloudstateio/samples-ui-chat/blob/master/chat-ui/chatapp_protos/presence.proto#L18[presence.proto].
@@ -186,11 +184,11 @@ We also need to know the fully qualified name of the service which are given by 
 
 [source,shell]
 ----
-$ csctl service expose friends \
+$ akkasls service expose friends \
   --hostname little-cherry-4517.us-east1.apps.lbcs.io \
   --uri-prefix=/cloudstate.samples.chat.friends.Friends/
 
-$ csctl service expose presence \
+$ akkasls service expose presence \
   --hostname little-cherry-4517.us-east1.apps.lbcs.io \
   --uri-prefix=/cloudstate.samples.chat.presence.Presence/
 ----
@@ -198,7 +196,7 @@ $ csctl service expose presence \
 
 == Testing the Chat Application
 
-By design, the route to access the Chat UI is `/pages/chat.html`. Using the chat-ui service entrypoint obtained when running `csctl service expose chat-ui`, our Chat application is accessible at:
+By design, the route to access the Chat UI is `/pages/chat.html`. Using the chat-ui service entrypoint obtained when running `akkasls service expose chat-ui`, our Chat application is accessible at:
 
 ----
 https://little-cherry-4517.us-east1.apps.lbcs.io/pages/chat.html

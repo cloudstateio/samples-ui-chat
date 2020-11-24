@@ -71,9 +71,9 @@ For the deployment, there are two possible choices. Below we highlight the main 
 This deployment approach doesn't require any local infrastructure. Lightbend Cloudstate, which is a kind of "Cloudstate-as-a-Service", will take care of the hosting, configuration and maintenance of your services. The deployment prodedure is pretty minimal:
 
 * Open an account with Lightbend Cloudstate
-* Install the "Cloudstate CLI" tool `csctl`
+* Install the "Cloudstate CLI" tool `akkasls`
 
-And that's it. Then you just use `csctl` to deploy the your services that you had published in your Docker registry.
+And that's it. Then you just use `akkasls` to deploy the your services that you had published in your Docker registry.
 
  
 ==== Self-hosting

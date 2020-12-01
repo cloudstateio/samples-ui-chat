@@ -61,7 +61,7 @@ $ akkasls version
 
 === Creating an Akka Serverless project
 
-A Akka Serverless project is a space within your Akka Serverless cluster. In this space, you will deploy your Cloudstate-aware application. In this step we use the Akka Serverless CLI `akkasls` to:
+An Akka Serverless project is a space within your Akka Serverless cluster. In this space, you will deploy your Cloudstate-aware application. In this step we use the Akka Serverless CLI `akkasls` to:
 
 * Login to your Akka Serverless cluster (which you got when signing-up for a <<signup-akka-serverless-account,Akka Serverless account>>)
 * Create a Akka Serverless project

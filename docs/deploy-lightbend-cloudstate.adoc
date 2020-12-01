@@ -1,8 +1,8 @@
-= Deploy Cloudstate Chat sample on Lightbend Cloudstate
+= Deploy Cloudstate Chat sample on Akka Serverless
 Lightbend, 2020
 Version 2.0, 2020-07-06
 :description: Cloudstate Chat Application
-:keywords: Lightbend Cloudstate, stateful, serverless, chat-sample, tutorial, LBCS
+:keywords: Akka Serverless, stateful, serverless, chat-sample, tutorial, LBCS
 :sectnums:
 :toc:
 ifdef::env-github[]
@@ -26,7 +26,7 @@ You have built the docker images of these services and published these images to
 
 If this is not the case, please review <<../README.adoc#cs-chat-sample-overview,Cloudstate Sample Chat Application>> to complete the prerequisites.
 
-We are now ready to deploy the Chat application, which we have chosen to deploy using Lightbend Cloudstate (managed hosting). Compared to the alternative of deploying on your own Kubernetes cluster, Lightbend Cloudstate relieves the developer from the burden related to the infrastructure:
+We are now ready to deploy the Chat application, which we have chosen to deploy using Akka Serverless (managed hosting). Compared to the alternative of deploying on your own Kubernetes cluster, Akka Serverless relieves the developer from the burden related to the infrastructure:
 
 * no need to provision hardware to setup (and maintain!) a Kubernetes cluster
 * simplify network configuration
@@ -35,20 +35,20 @@ We are now ready to deploy the Chat application, which we have chosen to deploy 
 
 == Prerequisites
 
-* Get [your Lightbend Cloudstate Account](https://docs.lbcs.io/gettingstarted/account.html)
-* Install [akkasls](https://docs.lbcs.io/getting-started/set-up-development-env.html)
+* Get [your Akka Serverless Account](https://docs.cloudstate.com/getting-started/lightbend-account.html)
+* Install [akkasls](https://docs.cloudstate.com/getting-started/set-up-development-env.html)
 
-[[signup-cloudstate-account]]
-=== Sign-up Cloudstate account
+[[signup-akka-serverless-account]]
+=== Sign-up Akka Serverless account
 
-With your Lightbend Cloudstate account, you will be granted a Kubernetes cluster on the cloud. This cluster is managed by Lightbend Cloudstate. It is customized to host services created using the https://github.com/cloudstateio/cloudstate[Cloudstate library].
+With your Akka Serverless account, you will be granted a Kubernetes cluster on the cloud. This cluster is managed by Akka Serverless. It is customized to host services created using the https://github.com/cloudstateio/cloudstate[Cloudstate library].
 
-Instructions: https://docs.lbcs.io/getting-started/lightbend-account.html[Using a Cloudstate account]
+Instructions: https://docs.cloudstate.com/getting-started/lightbend-account.html[Using an Akka Serverless account]
 
 
-=== Install Cloudstate CLI
+=== Install Akka Serverless CLI
 
-`akkasls` is the command line tool that you will use to deploy an application on your Cloudstate cluster. Instructions: https://docs.lbcs.io/getting-started/set-up-development-env.html#_cloudstate_cli[Install Cloudstate CLI]
+`akkasls` is the command line tool that you will use to deploy an application on your Akka Serverless cluster. Instructions: https://docs.cloudstate.com/getting-started/set-up-development-env.html#_cloudstate_cli[Install Akka Serverless CLI]
 
 The `akkasls` minimum version required is 0.0.16 which you can verify by:
 
@@ -59,45 +59,45 @@ $ akkasls version
 ----
 
 
-=== Creating a Cloudstate project
+=== Creating an Akka Serverless project
 
-A Cloudstate project is a space within your Cloudstate cluster. In this space, you will deploy your Cloudstate-aware application. In this step we use the Cloudstate CLI `akkasls` to:
+An Akka Serverless project is a space within your Akka Serverless cluster. In this space, you will deploy your Cloudstate-aware application. In this step we use the Akka Serverless CLI `akkasls` to:
 
-* Login to your Cloudstate cluster (which you got when signing-up for a <<signup-cloudstate-account,Cloudstate account>>)
-* Create a Cloudstate project
+* Login to your Akka Serverless cluster (which you got when signing-up for a <<signup-akka-serverless-account,Akka Serverless account>>)
+* Create an Akka Serverless project
 * Deploy your services in the project
 
-More details on `akkasls` is available at https://docs.lbcs.io/cli/index.html[akkasls reference documentation].
+More details on `akkasls` is available at https://docs.cloudstate.com/reference/cli-index.html[akkasls reference documentation].
 
 
 [source,shell]
 ----
-#===STEP1: connect akkasls to your Cloudstate account
+#===STEP1: connect akkasls to your Akka Serverless account
 $ akkasls auth login
 
-#===STEP2: create a new Cloudstate project
+#===STEP2: create a new Akka Serverless project
 # Syntax: akkasls project new "project-friendly-name" "Project description"
 # NOTE: project-friendly-name: no space, only lower case and dash
-$ akkasls project new chat-application "Chat room app built with Cloudstate services"
+$ akkasls project new chat-application "Chat room app built with Akka Serverless services"
 
 Created project chat-application.
 To make this the currently active project, run: 'akkasls config set project chat-application'
   NAME               DESCRIPTION                                    STATUS    ID
-  chat-application   Chat room app built with Cloudstate services   pending   3d864594-fefe-4708-82da-da842e4cdcde
+  chat-application   Chat room app built with Akka Serverless services   pending   3d864594-fefe-4708-82da-da842e4cdcde
 
-#===STEP3: set the new Cloudstate project as "current"
+#===STEP3: set the new Akka Serverless project as "current"
 $ akkasls config set project chat-application
 
 Project set to chat-application
 ----
 
-IMPORTANT:: A newly created project is in `pending` status, ie. you cannot yet deploy on your Cloudstate cluster.
-Once the project is activated by a Cloudstate administrator (within a short moment). Its status will change to `active`, at which point, you can begin to deploy your services. In case it takes long time for your project to get activated, you can https://docs.lbcs.io/getting-started/create-project.html#_project_status[notify Cloudstate admin]
+IMPORTANT:: A newly created project is in `pending` status, ie. you cannot yet deploy on your Akka Serverless cluster.
+Once the project is activated by an Akka Serverless administrator (within a short moment). Its status will change to `active`, at which point, you can begin to deploy your services. In case it takes long time for your project to get activated, you can https://docs.cloudstate.com/getting-started/projects.html#_project_status[notify Akka Serverless admin]
 
-Confirm your Cloudstate project is ready for deployment:
+Confirm your Akka Serverless project is ready for deployment:
 
 * The project status is `active`
-* The project is set as current. This helps to skip the `--project` parameter in `akkasls` commands when deploying on your Cloudstate cluster
+* The project is set as current. This helps to skip the `--project` parameter in `akkasls` commands when deploying on your Akka Serverless cluster
 
 [source,shell]
 ----
@@ -105,12 +105,12 @@ $ akkasls project list
 
 # Notice the `*` (marker for current project) in front of the project name
   NAME               DESCRIPTION                                    STATUS   ID
-* chat-application   Chat room app built with Cloudstate services   active   3d864594-fefe-4708-82da-da842e4cdcde
+* chat-application   Chat room app built with Akka Serverless services   active   3d864594-fefe-4708-82da-da842e4cdcde
 ----
 
 == Deployment
 
-Now we are ready to deploy our Chat application on our Cloudstate cluster. The deployment tool is also `akkasls`.
+Now we are ready to deploy our Chat application on our Akka Serverless cluster. The deployment tool is also `akkasls`.
 
 At this point you should have all your docker images published in your Docker registry, as mentioned in the <<deploy-cscluster-overview, Overview section>>. In case you Docker registry is private, the `akkasls` needs to be configured with the corresponding credentials.
 
@@ -122,7 +122,7 @@ $ akkasls docker add-credentials
 $ akkasls docker list-credentials
 ----
 
-In case you don't have your own docker images, you can still proceed with the deployment, using the images prebuilt by the Cloudstate project team.
+In case you don't have your own docker images, you can still proceed with the deployment, using the images prebuilt by the Akka Serverless project team.
 
 === Deploying chat-ui service
 
@@ -176,7 +176,7 @@ presence   2m5s    1          Ready
 WARNING: Normally, this is all we need to do to deploy the Chat application. For now, `akkasls` needs some workarounds to help the `chat-ui` to route service calls to dependant services. The step shown below is a temporary workaround. In the next version of `akkasls` this step will be unnecessary.
 {nbsp} +
 {nbsp} +
-Route all calls using the same endpoint as `chat-ui`, which was given by `akkasls service expose chat-ui` in the previous step. Internally, Lightbend Cloudstate will forward the calls to `friends` and `presence` services to the appropriate endpoints.
+Route all calls using the same endpoint as `chat-ui`, which was given by `akkasls service expose chat-ui` in the previous step. Internally, Akka Serverless will forward the calls to `friends` and `presence` services to the appropriate endpoints.
 {nbsp} +
 {nbsp} +
 We also need to know the fully qualified name of the service which are given by the gRPC service descriptors https://github.com/cloudstateio/samples-ui-chat/blob/master/chat-ui/chatapp_protos/friends.proto#L28[friends.proto] and https://github.com/cloudstateio/samples-ui-chat/blob/master/chat-ui/chatapp_protos/presence.proto#L18[presence.proto].

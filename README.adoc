@@ -1,7 +1,7 @@
 = Cloudstate Sample Chat Application
 Lightbend, 2020
 Version 2.0, 2020-06-25
-:description: Cloudstate Chat Application 
+:description: Cloudstate Chat Application
 :keywords: Cloudstate, stateful, serverless, chat-sample, tutorial
 :sectnums:
 :toc:
@@ -35,7 +35,7 @@ image::docs/images/ChatUI_NavigationGuide.png[Chat Application - Navigation Guid
 
 [horizontal]
 chat-ui:: directory containing the code of the stateless service `chat`. This code is written in TypeScript, and run as a Node.js server.
-deploy:: directory containing the yaml files to deploy all the services composing the Chat application. The target cluster could be your own Kubernetes cluster or https://www.cloudstate.com[Lightbend Cloudstate]
+deploy:: directory containing the yaml files to deploy all the services composing the Chat application. The target cluster could be your own Kubernetes cluster or https://www.cloudstate.com[Akka Serverless]
 
 The code of the backend services `Friends` and `Presence` is separate from the UI code. This is intentional to demonstrate the polyglot aspect of Cloudstate services. They can seamlessly interact regardless of the programming language used to implement the service. Below are the available implementations. You can choose any combination for deployment. For example, `Friends` service in JavaScript and `Presence` service in Java.
 
@@ -64,18 +64,18 @@ You must package your services into docker images and publish these images in a 
 
 === Self-hosting or Managed hosting?
 
-For the deployment, there are two possible choices. Below we highlight the main characteristics of each deployment approach. Details about prerequisites and infrastructure preparation would be discussed further in the <<deployment,Deployment>> section. 
+For the deployment, there are two possible choices. Below we highlight the main characteristics of each deployment approach. Details about prerequisites and infrastructure preparation would be discussed further in the <<deployment,Deployment>> section.
 
 ==== Managed hosting
 
-This deployment approach doesn't require any local infrastructure. Lightbend Cloudstate, which is a kind of "Cloudstate-as-a-Service", will take care of the hosting, configuration and maintenance of your services. The deployment prodedure is pretty minimal:
+This deployment approach doesn't require any local infrastructure. Akka Serverless, which is a kind of "Cloudstate-as-a-Service", will take care of the hosting, configuration and maintenance of your services. The deployment prodedure is pretty minimal:
 
-* Open an account with Lightbend Cloudstate
-* Install the "Cloudstate CLI" tool `akkasls`
+* Open an account with Akka Serverless
+* Install the "Akka Serverless CLI" tool `akkasls`
 
 And that's it. Then you just use `akkasls` to deploy the your services that you had published in your Docker registry.
 
- 
+
 ==== Self-hosting
 
 In case you prefer to host your own services, you need to provide a Kubernetes cluster. This cluster could be local or cloud-based and must fulfill the following requirements:
@@ -103,5 +103,5 @@ You can user our hosted UI here https://static.cloudstate.com/js-chat/index.html
 
 We have built, tested and published 2 dockers images of the 2 services: Friends, Presence. Now we are ready to deploy the Chat application. There are two possible tracks for deploying your services:
 
-* <<docs/deploy-lightbend-cloudstate.adoc#,Deploy on Lightbend Cloudstate>>
+* <<docs/deploy-lightbend-cloudstate.adoc#,Deploy on Akka Serverless>>
 * <<docs/deploy-self-hosted.adoc#,Deploy on your own Kubernetes cluster>>

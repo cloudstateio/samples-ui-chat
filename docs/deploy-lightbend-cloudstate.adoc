@@ -92,7 +92,7 @@ Project set to chat-application
 ----
 
 IMPORTANT:: A newly created project is in `pending` status, ie. you cannot yet deploy on your Akka Serverless cluster.
-Once the project is activated by a Akka Serverless administrator (within a short moment). Its status will change to `active`, at which point, you can begin to deploy your services. In case it takes long time for your project to get activated, you can https://docs.cloudstate.com/getting-started/projects.html#_project_status[notify Akka Serverless admin]
+Once the project is activated by an Akka Serverless administrator (within a short moment). Its status will change to `active`, at which point, you can begin to deploy your services. In case it takes long time for your project to get activated, you can https://docs.cloudstate.com/getting-started/projects.html#_project_status[notify Akka Serverless admin]
 
 Confirm your Akka Serverless project is ready for deployment:
 

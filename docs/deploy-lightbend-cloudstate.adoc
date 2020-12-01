@@ -43,7 +43,7 @@ We are now ready to deploy the Chat application, which we have chosen to deploy 
 
 With your Akka Serverless account, you will be granted a Kubernetes cluster on the cloud. This cluster is managed by Akka Serverless. It is customized to host services created using the https://github.com/cloudstateio/cloudstate[Cloudstate library].
 
-Instructions: https://docs.cloudstate.com/getting-started/lightbend-account.html[Using a Akka Serverless account]
+Instructions: https://docs.cloudstate.com/getting-started/lightbend-account.html[Using an Akka Serverless account]
 
 
 === Install Akka Serverless CLI
